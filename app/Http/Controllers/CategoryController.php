@@ -60,7 +60,9 @@ class CategoryController extends Controller
      */
     public function show(category $category)
     {
-        //
+        $categories = $category->load(['products']);
+        return view('pages.category.list-product', compact('category'),
+        ['judul'=> 'list barang']);
     }
 
     /**
@@ -87,9 +89,11 @@ class CategoryController extends Controller
      */
     public function update(UpdatecategoryRequest $request, category $category)
     {
-        //
+        //untuk menampilkan value database
         $data = $request->all();
+        //untuk menyimpan data setelah update
         $category->update($data);
+
         return redirect()->route('category.index')->with('notif','berhasil update');
     }
 

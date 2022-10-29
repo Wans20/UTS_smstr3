@@ -21,7 +21,7 @@ return new class extends Migration
             $table->text('description');
             $table->string('image',255)->nullable();
             $table->float('weight');
-            $table->decimal('price');
+            $table->decimal('price',12, 2);
             $table->timestamps();
         });
     }

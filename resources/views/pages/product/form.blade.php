@@ -1,76 +1,68 @@
 @extends('layouts.dashboard')
 @section('content') 
 
-<h3>{{ $student->id ? 'Form Edit' : 'Form Create' }}</h3>
+<h3>{{ $product->id ? 'Form Edit' : 'Form Create' }}</h3>
 
-@if($student->id)
-    <form action="{{ route('student.update' , ['student' => $student->id]) }}" method="POST" enctype="multipart/form-data">
+@if($product->id)
+    <form action="{{ route('product.update' , ['product' => $product->id]) }}" method="POST" enctype="multipart/form-data">
     @method('PUT')
 @else
-      <form action="{{ route('student.store') }}" method="POST" enctype="multipart/form-data">
+      <form action="{{ route('product.store') }}" method="POST" enctype="multipart/form-data">
 @endif
     @csrf
     <div class="mb-3">
-      <label for="name" class="form-label">Name</label>
-      <input type="text" class="form-control" name="name" value="{{ $student->name }}">
-      @error('name') <div class="text-muted text-danger">{{$message}}</div> @enderror
+      <label for="name" class="form-label">Title</label>
+      <input type="text" class="form-control" name="title" id="title" value="{{ $product->title }}">
+      @error('title') <div class="text-muted text-danger">{{$message}}</div> @enderror
     </div>
 
     <div class="mb-3">
-        <label for="gender" class="form-label">Gender</label>
-        <select name="gender" class="form-select">
-            <option disabled selected>--- Choose Your Gender ---</option>
-            <option value="male" {{ $student->gender == 'male' ? 'selected' : ''}}>Male</option>
-            <option value="female"{{ $student->gender == 'female' ? 'selected' : ''}}>Female</option>
+        <label for="gender" class="form-label">Status</label>
+        <select name="status" class="form-control" id="status">
+            <option disabled selected>--- Choose Your Status ---</option>
+            <option value="active" {{ $product->status == 'active' ? 'selected' : ''}}>Active</option>
+            <option value="inactive"{{ $product->status == 'inactive' ? 'selected' : ''}}>Inactive</option>
+            <option value="draft"{{ $product->status == 'draft' ? 'selected' : ''}}>Draft</option>
         </select>
-        @error('gender') <div class="text-muted text-danger">{{$message}}</div> @enderror
+        @error('status') <div class="text-muted text-danger">{{$message}}</div> @enderror
     </div>
 
     <div class="mb-3">
-        <label for="date" class="form-label">Date-Birth</label>
-        <input type="date" class="form-control" name="date_birth" value="{{ $student->date_birth }}">
-        @error('date_birth') <div class="text-muted text-danger">{{$message}}</div> @enderror
+        <label for="description" class="form-label">Description</label>
+        <textarea name="description" id="description" cols="10" rows="5" class="form-control">{{ $product->description }}</textarea>
+        @error('description') <div class="text-muted text-danger">{{$message}}</div> @enderror
       </div>
 
     <div class="mb-3">
-      <label for="address" class="form-label">Address</label>
-      <textarea type="text" class="form-control" name="address">{{ $student->address }}</textarea>
+      <label for="category" class="form-label">Category</label>
+      <select name="category_id" class="form-control" id="category_id">
+        <option selected disabled>--- Choose Your Major ---</option>
+        @foreach ($categories as $category)
+        <option value="{{ $category->id }}" {{ $product->category_id == $category->id ? ' selected' : '' }}>{{ $category->name }}</option>
+        @endforeach
+      </select>
       @error('address') <div class="text-muted text-danger">{{$message}}</div> @enderror
     </div>
 
     <div class="mb-3">
-      <label for="major" class="form-label">Major</label>
-      <select name="major_id" class="form-select">
-        <option disabled selected>--- Choose Your Major ---</option>
-        @foreach ($majors as $major)
-          <option value="{{ $major->id }}">{{ $major->name }}</option>
-        @endforeach
-      </select>
-      @error('major') <div class="text-muted text-danger">{{$message}}</div> @enderror
+      <label for="weight" class="form-label">Weight</label>
+      <input type="text" class="form-control" name="weight" id="weight" value="{{$product->weight}}">
     </div>
+
+    <div class="mb-3">
+      <label for="price" class="form-label">Price</label>
+      <input type="text" class="form-control" name="price" id="price" value="{{$product->price}}">
+    </div>
+    @error('price') <div class="text-muted text-danger">{{$message}}</div> @enderror
+
     <div class="mb-3">
       <label for="image" class="form-label">Image</label>
-      @if ($student->image != null)
-        <br><img src="/storage/{{ $student->image }}" alt="" width="100px">
-        
-      @endif
-      <input type="file" class="form-control" name="image">
-      @error('image') <div class="text-muted text-danger">{{$message}}</div> @enderror
+      <input type="file" name="image" class="form-control" id="image">
+      <img src="/storage/{{ $product->image }}" class="img-thumbnail" width="200px" height="200px">
     </div>
-    
+    @error('image') <div class="text-muted text-danger">{{$message}}</div> @enderror
+
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
   
 @endsection
-{{-- <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
-</head>
-<body>
-  Hello world!
-</body>
-</html> --}}

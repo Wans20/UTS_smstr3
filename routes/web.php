@@ -19,5 +19,5 @@ use App\Http\Controllers\ProductController;
 //     return view('welcome');
 // });
 
-Route::resource('products', ProductController::class);
+Route::resource('product', ProductController::class);
 Route::resource('category', CategoryController::class);
