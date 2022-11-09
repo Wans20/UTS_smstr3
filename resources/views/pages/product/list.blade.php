@@ -10,7 +10,7 @@
     </div>
 @endif
 
-<H1>List Student</H1>
+<H1>List Product</H1>
 <a href="/product/create" class="btn btn-primary mb-3">Input</a>
 <form class="row g-3" action="  " method="GET">
   <div class="col-auto">

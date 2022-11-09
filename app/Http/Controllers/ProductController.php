@@ -37,9 +37,7 @@ class ProductController extends Controller
         }
 
         $data = $data->paginate(15);
-        // dd($data);
         //ditambahkan with sebelum get untuk memanggil public function major di anggota.php
-        // $data = student::with(['major'])->get();
         return view('pages.product.list', [
             'judul' => 'list product',
             'data' => $data,
@@ -108,7 +106,7 @@ class ProductController extends Controller
         return view('pages.product.form',[
             'product' => $product,
             'categories'=>$categories,
-            'judul'=>"Form Edit Major"
+            'judul'=>"Form Edit Product"
         ]);
     }
 

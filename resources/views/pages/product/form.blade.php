@@ -11,7 +11,7 @@
 @endif
     @csrf
     <div class="mb-3">
-      <label for="name" class="form-label">Title</label>
+      <label for="name" class="form-label">Form Product</label>
       <input type="text" class="form-control" name="title" id="title" value="{{ $product->title }}">
       @error('title') <div class="text-muted text-danger">{{$message}}</div> @enderror
     </div>
