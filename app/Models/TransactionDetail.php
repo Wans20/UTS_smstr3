@@ -2,16 +2,21 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Transaction;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class TransactionDetail extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'transaction_id',
-        'product_id',
-        'quantity',
-        'amount',
-    ];
+
+    protected $fillable = ['id','transaction_id','product_id','quantity','amount',];
+
+    public function transaction()
+    {
+        return $this->belongsTo(Transaction::class);
+    }
+
+    public $incrementing = false;
+
 }

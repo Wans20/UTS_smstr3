@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use Ramsey\Uuid\Uuid;
 use App\Models\Transaction;
 use App\Models\TransactionDetail;
+use PhpParser\Node\Stmt\TryCatch;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreTransactionRequest;
 use App\Http\Requests\UpdateTransactionRequest;
-use PhpParser\Node\Stmt\TryCatch;
 
 class TransactionController extends Controller
 {
@@ -40,11 +41,12 @@ class TransactionController extends Controller
      */
     public function store(StoreTransactionRequest $request)
     {
-        $product=[1,2,3,4,5,6];
+        $product=[1,2];
 
         DB::beginTransaction();
         try {
             $transaction = Transaction::create([
+                'id' => Uuid::uuid4()->toString(),
                 'customer' => 'agung',
                 'total_amount' => 30000
             ]);
@@ -52,6 +54,7 @@ class TransactionController extends Controller
             $transaction_details = [];
             foreach ($product as $key => $value) {
                 $transaction_details[]=[
+                    'id' => Uuid::uuid4()->toString(),
                     'transaction_id' => $transaction->id,
                     'product_id' => $value,
                     'quantity' => 9000,
@@ -66,7 +69,7 @@ class TransactionController extends Controller
             return "Succes";
         } catch (\Throwable $th) {
             DB::rollback();
-            return "Failed";
+            return $th;
         }
     }
 
