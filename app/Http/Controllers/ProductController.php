@@ -60,7 +60,7 @@ class ProductController extends Controller
     {
         $product = new Product();
         $categories = category::get();
-        return view('pages.product.form',[
+        return view('admin.pages.product.form',[
             'product' => $product,
             'categories'=>$categories,
             'judul'=>"Form Create Product"
@@ -108,7 +108,7 @@ class ProductController extends Controller
     {
         //
         $categories = category::get();
-        return view('pages.product.form',[
+        return view('admin.pages.product.form',[
             'product' => $product,
             'categories'=>$categories,
             'judul'=>"Form Edit Product"
@@ -152,6 +152,6 @@ class ProductController extends Controller
             File::delete(storage_path('app/public/').$product->image);
         }
         $product->delete();
-        return redirect()->route('product.index')->with('notif','berhasil hapus data');
+        return redirect()->route('admin.pages.product.index')->with('notif','berhasil hapus data');
     }
 }

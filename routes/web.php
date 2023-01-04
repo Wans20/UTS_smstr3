@@ -5,7 +5,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\TransactionController;
+use App\Models\checkout;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,13 +24,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-Route::resource('product', ProductController::class);
-Route::resource('category', CategoryController::class);
-
-Route::get('/transaction',[TransactionController::class, 'store']);
 Auth::routes();
-
+Route::resource('/product', ProductController::class);
+Route::resource('/category', CategoryController::class);
+Route::resource('/transaction', TransactionController::class);
+Route::resource('/checkout', CheckoutController::class);
+Route::get('/chart', [CheckoutController::class, 'chart'])->name('chart');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 //example
 Route::get('/example', [App\Http\Controllers\ExampleController::class, 'example']);

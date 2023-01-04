@@ -1,12 +1,13 @@
 @extends('admin.layouts.index')
 @section('content')
+
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>DataTables</h1>
+                        <h1>LIST CATEGORY</h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
@@ -25,7 +26,6 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <H1>List Category Product</H1>
                                 <a href="/category/create" class="btn btn-primary mb-3">Input</a>
                                 <table class="table table-striped table-hover">
                                     <thead class="table-dark">

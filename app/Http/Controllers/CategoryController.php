@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\category;
 use App\Http\Requests\StorecategoryRequest;
 use App\Http\Requests\UpdatecategoryRequest;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
@@ -31,10 +32,12 @@ class CategoryController extends Controller
     public function create()
     {
         //
+        // if (!Auth::user()->hasPermissionTo('form category'))
+        // return redirect()->route('category.index')->with('notif', 'Tidak Memiliki Akses');
+
         $category = new category();
         return view('admin.pages.category.form',[
-            'category' => $category,
-            'judul'=>"Form Create category"
+            'category' => $category
         ]);
     }
 
