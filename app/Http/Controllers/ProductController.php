@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 
@@ -21,7 +22,12 @@ class ProductController extends Controller
         //
         $filter = $request->input('filter');
         $search = $request->input('search');
-        $data = product::with('category');
+        //
+        //
+        //
+        //
+        $data = Cache::remember('all-product',60, function () use ( $search, $filter){
+        $data = product::with(['category']);
 
         if ($search) {
             $data->where(function ($query) use ($search) {
@@ -35,13 +41,12 @@ class ProductController extends Controller
                 $query->where('category_id','=',$filter);
             });
         }
-
-        $data = $data->paginate(15);
-        //ditambahkan with sebelum get untuk memanggil public function major di anggota.php
-        return view('pages.product.list', [
+        return $data->get();
+    });
+        // $data = $data->paginate(15);
+        // //ditambahkan with sebelum get untuk memanggil public function major di anggota.php
+        return view('admin.pages.product.list', compact('data'),[
             'judul' => 'list product',
-            'data' => $data,
-            'categories' => Category::get()
     ]);
        
     }
@@ -55,7 +60,7 @@ class ProductController extends Controller
     {
         $product = new Product();
         $categories = category::get();
-        return view('pages.product.form',[
+        return view('admin.pages.product.form',[
             'product' => $product,
             'categories'=>$categories,
             'judul'=>"Form Create Product"
@@ -103,7 +108,7 @@ class ProductController extends Controller
     {
         //
         $categories = category::get();
-        return view('pages.product.form',[
+        return view('admin.pages.product.form',[
             'product' => $product,
             'categories'=>$categories,
             'judul'=>"Form Edit Product"
@@ -147,6 +152,6 @@ class ProductController extends Controller
             File::delete(storage_path('app/public/').$product->image);
         }
         $product->delete();
-        return redirect()->route('product.index')->with('notif','berhasil hapus data');
+        return redirect()->route('admin.pages.product.index')->with('notif','berhasil hapus data');
     }
 }

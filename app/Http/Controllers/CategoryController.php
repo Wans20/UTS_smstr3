@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\category;
 use App\Http\Requests\StorecategoryRequest;
 use App\Http\Requests\UpdatecategoryRequest;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
@@ -17,7 +18,7 @@ class CategoryController extends Controller
     {
         //
         $data = category::get();
-        return view('pages.category.list',[
+        return view('admin.pages.category.list',[
             'data'=>$data,
             'judul'=>"category product"
         ]);
@@ -31,10 +32,12 @@ class CategoryController extends Controller
     public function create()
     {
         //
+        // if (!Auth::user()->hasPermissionTo('form category'))
+        // return redirect()->route('category.index')->with('notif', 'Tidak Memiliki Akses');
+
         $category = new category();
-        return view('pages.category.form',[
-            'category' => $category,
-            'judul'=>"Form Create category"
+        return view('admin.pages.category.form',[
+            'category' => $category
         ]);
     }
 
@@ -61,7 +64,7 @@ class CategoryController extends Controller
     public function show(category $category)
     {
         $categories = $category->load(['products']);
-        return view('pages.category.list-product', compact('category'),
+        return view('admin.pages.category.list-product', compact('category'),
         ['judul'=> 'list barang']);
     }
 
@@ -74,7 +77,7 @@ class CategoryController extends Controller
     public function edit(category $category)
     {
         //
-        return view('pages.category.form',[
+        return view('admin.pages.category.form',[
             'category' => $category,
             'judul'=>"Form Edit Category"
         ]);

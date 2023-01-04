@@ -2,10 +2,7 @@
 
 @section('content')
 <h3>Category {{ $category->name }}</h3>
-{{-- fungsi count dari php asli --}}
 <h5>All Products : {{ count($category->products) }}</h5>
-{{-- fungsi count dari laravel --}}
-{{-- <p>Jumlah Siswa : {{ $major->students->count() }}</p> --}}
 <table class="table table-striped table-hover">
     <thead class="table-dark">
       <tr>
