@@ -25,7 +25,7 @@ class CheckoutController extends Controller
      */
     public function index()
     {
-        $data = Product::paginate(100);
+        $data = Product::with('category')->paginate(100);
         return view('admin.pages.checkout.product', compact('data'), [
             'title' => 'List Product',
         ]);
@@ -43,21 +43,21 @@ class CheckoutController extends Controller
         $checkout = [
             'products' => [],
             'user' => [
-                "name" => "",
-                "address" => ""
+                'name' => '',
+                'address' => '',
             ],
         ];
         $data = Cache::get('checkout', $checkout);
         $temp = null;
         if (isset($data['products'][$productID])) {
-            $temp =  [
-                "id" => $productID,
-                "qty" => $qty + $data['products'][$productID]['qty']
+            $temp = [
+                'id' => $productID,
+                'qty' => $qty + $data['products'][$productID]['qty'],
             ];
         } else {
-            $temp =  [
-                "id" => $productID,
-                "qty" => $qty
+            $temp = [
+                'id' => $productID,
+                'qty' => $qty,
             ];
         }
         $data['products'][$productID] = $temp;
@@ -88,25 +88,26 @@ class CheckoutController extends Controller
                 'customer' => $data['customer_name'],
                 'total_amount' => $data['total_amount'],
             ]);
-    
+
             $transaction_details = [];
             foreach ($productIds as $key => $value) {
                 $product = $product->firstWhere('id', $value);
-                $transaction_details[]=[
+                $transaction_details[] = [
                     'id' => Uuid::uuid4()->toString(),
                     'transaction_id' => $transaction->id,
                     'product_id' => $product['id'],
                     'quantity' => $qty[$key],
                     'amount' => $prices[$key],
-                    'created_at' => Carbon::now()
+                    'created_at' => Carbon::now(),
                 ];
             }
-            if ($transaction_details){
+            if ($transaction_details) {
                 TransactionDetail::insert($transaction_details);
             }
             // biki transaction di midtrans
             $paymentUrl = $this->createInvoice($transaction);
 
+            Cache::forget('checkout');
             DB::commit();
             return $paymentUrl;
         } catch (\Throwable $th) {
@@ -115,8 +116,8 @@ class CheckoutController extends Controller
         }
     }
 
-    public function createInvoice($transaction){
-
+    public function createInvoice($transaction)
+    {
         //set konnfigrasi midtrans ngambil dari config/midrtrans.php
         Config::$serverKey = config('midtrans.serverKey');
         Config::$isProduction = config('midtrans.isProduction');
@@ -125,16 +126,16 @@ class CheckoutController extends Controller
 
         // buat params untuk dikirim ke midtrans
         $midtrans_params = [
-            'transaction_details' =>[
+            'transaction_details' => [
                 'order_id' => $transaction->id,
-                'gross_amount' => (int) $transaction->total_amount //ditetapkan harus int yang dikirim
+                'gross_amount' => (int) $transaction->total_amount, //ditetapkan harus int yang dikirim
             ],
-            'customer_details' =>[
+            'customer_details' => [
                 'first_name' => $transaction->customer,
-                'email' => "wans200102@gmail.com",
+                'email' => 'wans200102@gmail.com',
             ],
         ];
-$paymentUrl = Snap::createTransaction($midtrans_params)->redirect_url;
+        $paymentUrl = Snap::createTransaction($midtrans_params)->redirect_url;
         return $paymentUrl;
     }
 
@@ -190,26 +191,26 @@ $paymentUrl = Snap::createTransaction($midtrans_params)->redirect_url;
         $qty = [];
         $prices = [];
 
-        foreach($data['products'] as $product){
+        foreach ($data['products'] as $product) {
             $id[] = $product['id'];
             $qty[] = $product['qty'];
         }
 
         $products = Product::whereIn('id', $id)->get();
 
-        foreach($products as $product){
+        foreach ($products as $product) {
             $prices[] = $product->price;
         }
 
         $totalPrice = 0;
 
-        foreach($prices as $key => $price){
+        foreach ($prices as $key => $price) {
             $totalPrice += $price * $qty[$key];
         }
         return view('admin.pages.checkout.chart', compact('data'), [
             'title' => 'My Chart',
             'products' => $products,
-            'totalPrice' => $totalPrice
+            'totalPrice' => $totalPrice,
         ]);
     }
 }
